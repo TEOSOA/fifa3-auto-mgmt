@@ -1,0 +1,749 @@
+{
+  "version": 1,
+  "values": [
+    {
+      "name": "version",
+      "group": "app",
+      "value": "1.6.0",
+      "source": "PE RT_VERSION resource, function 0x14001be60 reads __p__wcmdln then 0x14001b160 (ev_cc3d30df0ed59f2614b2921b219f9114cccd4033014014f7983b26b61309c51b)"
+    },
+    {
+      "name": "mode",
+      "group": "app",
+      "value": "League (VS COM)",
+      "source": "README.txt (ev_548ef321bc96b8a7d4f754d9d69a36935e55d990c6db2b8d760af361bd20912a)"
+    },
+    {
+      "name": "language count",
+      "group": "ui",
+      "value": 3,
+      "source": "README.txt: ไทย | English | Tiếng Việt"
+    },
+    {
+      "name": "toggle key",
+      "group": "controls",
+      "value": "F8",
+      "source": "README.txt"
+    },
+    {
+      "name": "renew default",
+      "group": "automation",
+      "value": false,
+      "source": "README.txt: off by default, costs in-game EP"
+    },
+    {
+      "name": "minimize policy",
+      "group": "controls",
+      "value": "forbidden; use hide switch",
+      "source": "README.txt"
+    },
+    {
+      "name": "child process wait timeout",
+      "group": "bootloader",
+      "value": 5000,
+      "unit": "ms",
+      "source": "WaitForSingleObject(hProc, 0x1388) in function 0x140013e40 (ev_7e5aa81ef4b34f31ebb5a9699d18cd9b2c1ad3941759f721052da247aef24205)"
+    },
+    {
+      "name": "temp folder delete retry",
+      "group": "bootloader",
+      "value": 20,
+      "source": "SHFileOperationW loop: r14d = 0x14 (20) in function 0x140013e40 (ev_7e5aa81ef4b34f31ebb5a9699d18cd9b2c1ad3941759f721052da247aef24205)"
+    },
+    {
+      "name": "retry back-off",
+      "group": "bootloader",
+      "value": 100,
+      "unit": "ms",
+      "source": "Sleep(0x64) in the retry loop, function 0x140013e40 (ev_7e5aa81ef4b34f31ebb5a9699d18cd9b2c1ad3941759f721052da247aef24205)"
+    },
+    {
+      "name": "temp folder name",
+      "group": "bootloader",
+      "value": "{TEMP}\\onefile_{PID}_{TIME_US}_{RANDOM}",
+      "source": "UTF-16 string at 0x143ea0c00, expanded by 0x140012b00 (ev_6dd07e95f6484df6df42fe95bfdc23f4cadf37cc5cb075aed35ecd2837c3a0ff, ev_1c2914d58aa82d8e8251f154a6555f10f651cb9513e62e4e19f823ecabdbb737)"
+    },
+    {
+      "name": "splash size",
+      "group": "bootloader",
+      "value": "420x230 px PNG",
+      "source": "RT_RCDATA resource 28, IHDR bytes at 0x143f1b1a0 (ev_65a51bc2941cf83081e269b85e8f0152f30f513bce615e0ef1a1af678ec8f3ca); drawn by 0x14001ac60 (ev_14c54576d72efff124a1f6fe52881d7e8b0c8ec5879f2142d96ed782df968943)"
+    },
+    {
+      "name": "unlimited rounds switch",
+      "group": "automation",
+      "value": false,
+      "source": "screenshot of the original v1.6 window (attachments/picture-3.png): switch off"
+    },
+    {
+      "name": "hide game window default",
+      "group": "controls",
+      "value": false,
+      "source": "screenshot of the original v1.6 window (attachments/picture-3.png): switch off"
+    },
+    {
+      "name": "game window size shown",
+      "group": "ui",
+      "value": "1600x900",
+      "source": "screenshot of the original v1.6 window (attachments/picture-3.png): connection card"
+    },
+    {
+      "name": "default target rounds",
+      "group": "automation",
+      "value": 5,
+      "source": "screenshot of the original (attachments/picture-3.png): '0 / 5'"
+    },
+    {
+      "name": "target rounds range",
+      "group": "automation",
+      "value": "1-999",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), docstring at 0x112e491 'พิมพ์เลขที่ใช้ได้ (1-999)'"
+    },
+    {
+      "name": "idle minutes before auto-stop",
+      "group": "automation",
+      "value": 5,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), default_config() idle_minutes = 5 (l 0x05 at 0x1127ece)"
+    },
+    {
+      "name": "stuck repeated clicks before auto-stop",
+      "group": "automation",
+      "value": 8,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), default_config() stuck_clicks = 8 (l 0x08 at 0x1127ecc)"
+    },
+    {
+      "name": "scan interval",
+      "group": "automation",
+      "value": 0.06,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), default_config() scan_interval float at 0x1127ebf"
+    },
+    {
+      "name": "capture method",
+      "group": "automation",
+      "value": "wgc",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), default_config() capture_method at 0x1127ec8"
+    },
+    {
+      "name": "game window title",
+      "group": "automation",
+      "value": "FIFA ONLINE3 - Developed by SPEARHEAD",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), default_config() window_title at 0x1127e8c"
+    },
+    {
+      "name": "game program",
+      "group": "automation",
+      "value": "fifazf.exe",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), default_config() window_exe at 0x1127eb3"
+    },
+    {
+      "name": "steps per round",
+      "group": "automation",
+      "value": 7,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), BUTTON_STEP/WAIT_STEP step labels at 0x11370e6..0x11371c4: VS COM, League, Simulate match, Await full time, View match result, Select random reward, Next"
+    },
+    {
+      "name": "contract pop-up, renew off",
+      "group": "automation",
+      "value": "click Cancel",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _contract_choice, hint text at 0x1136cbc"
+    },
+    {
+      "name": "contract pop-up, renew on",
+      "group": "automation",
+      "value": "click Renew contract (costs EP)",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), hint text at 0x1136dd4"
+    },
+    {
+      "name": "requires administrator",
+      "group": "app",
+      "value": true,
+      "source": "PE manifest requestedExecutionLevel=requireAdministrator (ev_cc3d30df0ed59f2614b2921b219f9114cccd4033014014f7983b26b61309c51b)"
+    },
+    {
+      "name": "default language",
+      "group": "ui",
+      "value": "Thai",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), docstring at 0x113603a 'ไทยเป็นค่าเริ่มต้น'"
+    },
+    {
+      "name": "languages",
+      "group": "ui",
+      "value": "TH / EN / VI",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), TEXT dict keys th/en/vi at 0x113615b"
+    },
+    {
+      "name": "click method default",
+      "group": "automation",
+      "value": "postmessage",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), docstring at 0x112645c"
+    },
+    {
+      "name": "hide game window method",
+      "group": "automation",
+      "value": "near-transparent + click-through + bottom-most",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), docstring at 0x1143299"
+    },
+    {
+      "name": "button contract_renew match threshold",
+      "group": "buttons",
+      "value": 0.92,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button contract_renew priority",
+      "group": "buttons",
+      "value": 0,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button contract_renew wait after click",
+      "group": "buttons",
+      "value": 1.5,
+      "unit": "s",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button contract_cancel match threshold",
+      "group": "buttons",
+      "value": 0.92,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button contract_cancel priority",
+      "group": "buttons",
+      "value": 0,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button contract_cancel wait after click",
+      "group": "buttons",
+      "value": 1.5,
+      "unit": "s",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button contract_renew_off match threshold",
+      "group": "buttons",
+      "value": 0.9,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button contract_renew_off priority",
+      "group": "buttons",
+      "value": 0,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button contract_renew_off wait after click",
+      "group": "buttons",
+      "value": 1.5,
+      "unit": "s",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button contract_done_title match threshold",
+      "group": "buttons",
+      "value": 0.88,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button contract_done_title priority",
+      "group": "buttons",
+      "value": 0,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button contract_done_title wait after click",
+      "group": "buttons",
+      "value": 1.0,
+      "unit": "s",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button level_up_title match threshold",
+      "group": "buttons",
+      "value": 0.8,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button level_up_title priority",
+      "group": "buttons",
+      "value": 0,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button level_up_title wait after click",
+      "group": "buttons",
+      "value": 1.0,
+      "unit": "s",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button accept match threshold",
+      "group": "buttons",
+      "value": 0.88,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button accept priority",
+      "group": "buttons",
+      "value": 0,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button accept wait after click",
+      "group": "buttons",
+      "value": 1.0,
+      "unit": "s",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button mode_master match threshold",
+      "group": "buttons",
+      "value": 0.88,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button mode_master priority",
+      "group": "buttons",
+      "value": 0,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button mode_master wait after click",
+      "group": "buttons",
+      "value": 1.0,
+      "unit": "s",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button sponsor_ok match threshold",
+      "group": "buttons",
+      "value": 0.9,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button sponsor_ok priority",
+      "group": "buttons",
+      "value": 1,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button sponsor_ok wait after click",
+      "group": "buttons",
+      "value": 1.5,
+      "unit": "s",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button random_pick match threshold",
+      "group": "buttons",
+      "value": 0.88,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button random_pick priority",
+      "group": "buttons",
+      "value": 1,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button random_pick wait after click",
+      "group": "buttons",
+      "value": 1.5,
+      "unit": "s",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button result match threshold",
+      "group": "buttons",
+      "value": 0.9,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button result priority",
+      "group": "buttons",
+      "value": 1,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button result wait after click",
+      "group": "buttons",
+      "value": 1.5,
+      "unit": "s",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button next match threshold",
+      "group": "buttons",
+      "value": 0.85,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button next priority",
+      "group": "buttons",
+      "value": 1,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button next wait after click",
+      "group": "buttons",
+      "value": 1.5,
+      "unit": "s",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button sim_match match threshold",
+      "group": "buttons",
+      "value": 0.85,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button sim_match priority",
+      "group": "buttons",
+      "value": 2,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button sim_match wait after click",
+      "group": "buttons",
+      "value": 1.0,
+      "unit": "s",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button VSCOM match threshold",
+      "group": "buttons",
+      "value": 0.85,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button VSCOM priority",
+      "group": "buttons",
+      "value": 3,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button VSCOM wait after click",
+      "group": "buttons",
+      "value": 1.0,
+      "unit": "s",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button League match threshold",
+      "group": "buttons",
+      "value": 0.85,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button League priority",
+      "group": "buttons",
+      "value": 2,
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "button League wait after click",
+      "group": "buttons",
+      "value": 1.0,
+      "unit": "s",
+      "source": "unpacked main.dll from the exe's KAY(+zstd payload at file offset 0x27600 (read by WinMain 0x140013f70), _default_buttons() at 0x11274dd..0x11279d5"
+    },
+    {
+      "name": "demo: seconds for next screen to appear",
+      "group": "timing",
+      "value": 2.0,
+      "unit": "s",
+      "estimated": true
+    },
+    {
+      "name": "demo: simulated match length",
+      "group": "timing",
+      "value": 90.0,
+      "unit": "s",
+      "estimated": true
+    },
+    {
+      "name": "round counted when",
+      "group": "automation",
+      "value": "Next clicked",
+      "estimated": true
+    },
+    {
+      "name": "League button priority (parse uncertain)",
+      "group": "buttons",
+      "value": 2,
+      "estimated": true
+    },
+    {
+      "name": "Buy: default target count",
+      "group": "buy",
+      "value": 5,
+      "estimated": true
+    },
+    {
+      "name": "Buy: target range",
+      "group": "buy",
+      "value": "1-999",
+      "estimated": true
+    },
+    {
+      "name": "Buy: level choices",
+      "group": "buy",
+      "value": "+1..+10",
+      "estimated": true
+    },
+    {
+      "name": "Buy: default level",
+      "group": "buy",
+      "value": 1,
+      "estimated": true
+    },
+    {
+      "name": "Buy: steps per purchase",
+      "group": "buy",
+      "value": 5,
+      "estimated": true
+    },
+    {
+      "name": "Buy: level badge threshold",
+      "group": "buy",
+      "value": 0.9,
+      "estimated": true
+    },
+    {
+      "name": "Buy: buy/confirm threshold",
+      "group": "buy",
+      "value": 0.88,
+      "estimated": true
+    },
+    {
+      "name": "Buy: accept threshold",
+      "group": "buy",
+      "value": 0.88,
+      "estimated": true
+    },
+    {
+      "name": "Buy: navigation threshold",
+      "group": "buy",
+      "value": 0.85,
+      "estimated": false,
+      "source": "Template default threshold 0.85 (fo3bot.matcher)"
+    },
+    {
+      "name": "Buy: navigation path",
+      "group": "buy",
+      "value": "Team > Team manage > Player manage > Level",
+      "estimated": true
+    },
+    {
+      "name": "Buy: stall stop minutes",
+      "group": "buy",
+      "value": 5,
+      "estimated": true
+    },
+    {
+      "name": "Buy: demo seconds per screen",
+      "group": "buy",
+      "value": 1.0,
+      "estimated": true
+    },
+    {
+      "name": "Template default threshold",
+      "group": "matcher",
+      "value": 0.85,
+      "estimated": false,
+      "source": "fo3bot.matcher, main.dll: const 0x181142b02 (class Template, line 37)"
+    },
+    {
+      "name": "SCALED_FLOOR",
+      "group": "matcher",
+      "value": 0.75,
+      "estimated": false,
+      "source": "fo3bot.matcher, main.dll: slot 0x1813d71e8 <- 0x1813d74d8, set at 0x180166dde; used by sub_18016bac0"
+    },
+    {
+      "name": "SCALED_SLACK",
+      "group": "matcher",
+      "value": 0.04,
+      "estimated": false,
+      "source": "fo3bot.matcher, main.dll: slot 0x1813d71f0 <- 0x1813d74d0, set at 0x180166dcb; used by sub_18016bac0"
+    },
+    {
+      "name": "Scaled threshold formula",
+      "group": "matcher",
+      "value": "max(min(th, 0.75), th - 0.04)",
+      "estimated": false,
+      "source": "fo3bot.matcher, main.dll: sub_18016bac0 (scale_template, line 78)"
+    },
+    {
+      "name": "Scaled size formula",
+      "group": "matcher",
+      "value": "max(1, round(w*sx)), max(1, round(h*sy)); INTER_AREA shrink / INTER_CUBIC grow",
+      "estimated": false,
+      "source": "fo3bot.matcher, main.dll: sub_18016bac0"
+    },
+    {
+      "name": "Match method",
+      "group": "matcher",
+      "value": "cv2.matchTemplate TM_CCOEFF_NORMED, NaN -> 0",
+      "estimated": false,
+      "source": "fo3bot.matcher, main.dll: best_match consts 0x181141f42..0x181141f8e"
+    },
+    {
+      "name": "COARSE",
+      "group": "matcher",
+      "value": 2,
+      "estimated": false,
+      "source": "fo3bot.matcher, main.dll: slot 0x1813d7278 <- 0x1813d7190, 0x180166e5d"
+    },
+    {
+      "name": "COARSE_GRAY",
+      "group": "matcher",
+      "value": true,
+      "estimated": false,
+      "source": "fo3bot.matcher, main.dll: slot 0x1813d7288 <- Py_True, 0x180166eab"
+    },
+    {
+      "name": "COARSE_MIN_AREA",
+      "group": "matcher",
+      "value": 350000,
+      "estimated": false,
+      "source": "fo3bot.matcher, main.dll: slot 0x1813d7360 <- 0x1813d74f8, 0x180166e77"
+    },
+    {
+      "name": "COARSE_MARGIN",
+      "group": "matcher",
+      "value": 0.15,
+      "estimated": false,
+      "source": "fo3bot.matcher, main.dll: slot 0x1813d7380 <- 0x1813d7500, 0x180166e91"
+    },
+    {
+      "name": "COARSE_PEAKS",
+      "group": "matcher",
+      "value": 3,
+      "estimated": false,
+      "source": "fo3bot.matcher, main.dll: slot 0x1813d7388 <- 0x1813d72f0, 0x180166ec5"
+    },
+    {
+      "name": "CLIP_EDGE_GAP",
+      "group": "matcher",
+      "value": 0.05,
+      "estimated": false,
+      "source": "fo3bot.matcher, main.dll: slot 0x1813d7328 <- 0x1813d72d0, sub_180165550"
+    },
+    {
+      "name": "CLIP_SLACK",
+      "group": "matcher",
+      "value": 0.04,
+      "estimated": false,
+      "source": "fo3bot.matcher, main.dll: slot 0x1813d7330 <- 0x1813d74d0, sub_180165550"
+    },
+    {
+      "name": "Clipped layout rule",
+      "group": "matcher",
+      "value": "W*3 < H*4",
+      "estimated": false,
+      "source": "fo3bot.matcher, main.dll: layout_is_clipped consts 4, 3 (line 138)"
+    },
+    {
+      "name": "Template folders",
+      "group": "matcher",
+      "value": "templates/, templates/en/, templates/vi/",
+      "estimated": false,
+      "source": "fo3bot.matcher, main.dll: strings 0x1810ae3f1..0x1810ae754"
+    },
+    {
+      "name": "Hires scales",
+      "group": "matcher",
+      "value": "TH 1.20/1.60/1.67, VI 1.80, EN 1.875",
+      "estimated": false,
+      "source": "fo3bot.matcher, main.dll: strings 0x1810ae815..0x1810aed62, regex 0x181122c09"
+    },
+    {
+      "name": "MIN_SETTLE (s)",
+      "group": "bot-loop",
+      "value": 0.12,
+      "source": "fo3bot.bot, main.dll init sub_180052480: name 0x1813d0720 <- 0x1813d0a88; read by sub_180074650"
+    },
+    {
+      "name": "POLL_INTERVAL (s)",
+      "group": "bot-loop",
+      "value": 0.04,
+      "source": "fo3bot.bot, main.dll init sub_180052480: name 0x1813d0748 <- 0x1813d0a90; read by sub_180074650"
+    },
+    {
+      "name": "HOVER_BEFORE_CLICK (s)",
+      "group": "bot-loop",
+      "value": 0.1,
+      "source": "fo3bot.bot, main.dll init sub_180052480: name 0x1813d08e0 <- 0x1813d0ae0; read by sub_180075790"
+    },
+    {
+      "name": "WAKE_AFTER_NO_EFFECT (clicks)",
+      "group": "bot-loop",
+      "value": 3,
+      "source": "fo3bot.bot, main.dll init sub_180052480: name 0x1813d0940 <- 0x1813d0a98; read by sub_180075790"
+    },
+    {
+      "name": "STUCK_MIN_SECONDS",
+      "group": "bot-loop",
+      "value": 60.0,
+      "source": "fo3bot.bot, main.dll init sub_180052480: name 0x1813d0610 <- 0x1813d0ab8; read by sub_18006fb90"
+    },
+    {
+      "name": "STUCK_KEEP (pictures)",
+      "group": "bot-loop",
+      "value": 20,
+      "source": "fo3bot.bot, main.dll init sub_180052480: name 0x1813d06e8 <- 0x1813d0a80; read by sub_180072df0"
+    },
+    {
+      "name": "PICK_COOLDOWN (s)",
+      "group": "bot-loop",
+      "value": 4,
+      "source": "fo3bot.bot, main.dll init sub_180052480: name 0x1813d0440 <- 0x1813d0aa8; read by sub_1800633d0",
+      "estimated": true
+    },
+    {
+      "name": "SCALE_NEAR",
+      "group": "bot-loop",
+      "value": 0.015,
+      "source": "fo3bot.bot, main.dll init sub_180052480: name 0x1813d0328 <- 0x1813d0ac8; read by sub_180062770"
+    },
+    {
+      "name": "SCALE_RANGE",
+      "group": "bot-loop",
+      "value": "0.5-3.0",
+      "source": "fo3bot.bot, main.dll init sub_180052480: name 0x1813d0400 <- 0x1813d0ad0; read by sub_180062770"
+    },
+    {
+      "name": "ACK_MAX_DY (px)",
+      "group": "bot-loop",
+      "value": 140,
+      "source": "fo3bot.bot, main.dll init sub_180052480: name 0x1813d0520 <- 0x1813d0ab0; read by sub_18006a130"
+    },
+    {
+      "name": "ACK_MAX_DY_BY_TITLE (px)",
+      "group": "bot-loop",
+      "value": 340,
+      "source": "fo3bot.bot, main.dll init sub_180052480: dict const 0x181122aee (level-up TH/VI/EN, contract-done EN)"
+    },
+    {
+      "name": "CONTRACT_PAIR_DY (px)",
+      "group": "bot-loop",
+      "value": 4,
+      "source": "fo3bot.bot, main.dll init sub_180052480: name 0x1813d0568 <- 0x1813d0aa8; read by sub_18006cff0"
+    },
+    {
+      "name": "CONTRACT_PAIR_GAP (px)",
+      "group": "bot-loop",
+      "value": "35-85",
+      "source": "fo3bot.bot, main.dll init sub_180052480: name 0x1813d0570 <- 0x1813d0aa0; read by sub_18006cff0"
+    },
+    {
+      "name": "Stuck rule",
+      "group": "bot-loop",
+      "value": "repeats >= 8 and >= 60 s",
+      "source": "fo3bot.bot, main.dll init sub_180052480: sub_18006fb90 note_scan"
+    }
+  ]
+}

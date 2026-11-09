@@ -1,0 +1,13 @@
+# Build output (rebuilt with cargo)
+/target/
+
+# Test screenshots
+/shots/
+
+# The built program: attach it to a GitHub Release instead
+/windows/*.exe
+
+# System files
+.DS_Store
+Thumbs.db
+MECHANICS.md

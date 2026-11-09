@@ -1,0 +1,21 @@
+[package]
+name = "fifao3-mgmt"
+version = "1.6.0"
+edition = "2021"
+
+[[bin]]
+name = "FiFAO3Mgmt"
+path = "src/main.rs"
+
+[dependencies]
+eframe = "0.29"
+egui = "0.29"
+image = "0.25"
+winit = "0.30"
+
+[profile.release]
+strip = true
+opt-level = 3
+
+[build-dependencies]
+embed-resource = "3"

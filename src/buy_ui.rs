@@ -22,6 +22,8 @@ pub struct BuyTexts {
     pub reset: &'static str,
     pub bought: &'static str,
     pub looking_for: &'static str,
+    pub try_again: &'static str,
+    pub retry_wait: &'static str,
     pub current_step: &'static str,
     pub not_started: &'static str,
     pub buy_steps: [&'static str; 5],
@@ -56,6 +58,8 @@ static TH: BuyTexts = BuyTexts {
     reset: "รีเซ็ตจำนวน",
     bought: "ซื้อสำเร็จแล้ว",
     looking_for: "มองหาระดับ",
+    try_again: "ไม่นับ (เกมให้รอ)",
+    retry_wait: "เกมให้รอสักครู่ กำลังลองซื้อใหม่",
     current_step: "ขั้นตอนปัจจุบัน",
     not_started: "ยังไม่เริ่มดำเนินการ",
     buy_steps: ["หานักเตะระดับที่เลือก", "เลือกนักเตะ", "กดซื้อ", "ยืนยันการซื้อ", "ยอมรับ"],
@@ -80,6 +84,8 @@ static EN: BuyTexts = BuyTexts {
     reset: "Reset count",
     bought: "Bought",
     looking_for: "Looking for",
+    try_again: "Not counted (game busy)",
+    retry_wait: "Game asked to wait, trying again",
     current_step: "Current step",
     not_started: "Not started",
     buy_steps: ["Find chosen level", "Select player", "Click Buy", "Confirm purchase", "Accept"],
@@ -104,6 +110,8 @@ static VI: BuyTexts = BuyTexts {
     reset: "Đặt lại số lượng",
     bought: "Đã mua",
     looking_for: "Tìm cấp",
+    try_again: "Không tính (game bận)",
+    retry_wait: "Game yêu cầu chờ, đang thử lại",
     current_step: "Bước hiện tại",
     not_started: "Chưa bắt đầu",
     buy_steps: ["Tìm cấp đã chọn", "Chọn cầu thủ", "Bấm Mua", "Xác nhận mua", "Chấp nhận"],
@@ -188,6 +196,13 @@ fn count_card(ui: &mut egui::Ui, p: &Palette, t: &BuyTexts, buyer: &mut Buyer) {
             ui.label(RichText::new(t.looking_for).font(regular(13.0)).color(p.sub));
             let (r, _) = ui.allocate_exact_size(Vec2::new(40.0, 24.0), Sense::hover());
             badge(ui.painter(), r, buyer.level);
+            // "Please wait and try again" answers: shown apart, never in
+            // the bought count.
+            ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                let c = if buyer.try_again > 0 { Color32::from_rgb(240, 140, 60) } else { p.muted };
+                ui.label(RichText::new(buyer.try_again.to_string()).font(semi(14.0)).color(c));
+                ui.label(RichText::new(t.try_again).font(regular(13.0)).color(p.sub));
+            });
         });
     });
 }
@@ -198,6 +213,8 @@ fn step_card(ui: &mut egui::Ui, p: &Palette, t: &BuyTexts, buyer: &Buyer) {
         let nav = buyer.state == BuyState::GoingToUpgrade;
         let label = if !running {
             t.not_started
+        } else if buyer.waiting_retry() {
+            t.retry_wait
         } else if nav {
             let i = NAV_STEPS.iter().position(|(s, _)| *s == NAV_STEPS[buyer.step].0).unwrap_or(0);
             t.nav_steps[i]

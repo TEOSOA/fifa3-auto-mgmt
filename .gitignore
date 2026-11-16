@@ -10,4 +10,8 @@
 # System files
 .DS_Store
 Thumbs.db
+/windows/templates/
+/windows/*.txt
+/versions/
 MECHANICS.md
+GITHUB_UPLOAD.md

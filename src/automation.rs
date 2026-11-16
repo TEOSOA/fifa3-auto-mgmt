@@ -86,6 +86,10 @@ pub struct Automation {
     pub unlimited: bool,
     pub hide_window: bool,
     pub renew_contracts: bool,
+    /// Picture folder of the game's language ("" Thai, "en", "vi").
+    pub lang_dir: &'static str,
+    /// The real bot on Windows (None: the demo runs).
+    worker: Option<crate::engine::Worker>,
 }
 
 impl Automation {
@@ -103,6 +107,8 @@ impl Automation {
             unlimited: false,
             hide_window: false,
             renew_contracts: false,
+            lang_dir: "",
+            worker: None,
         }
     }
 
@@ -130,6 +136,10 @@ impl Automation {
         self.last_progress = now;
         self.run_started = Some(now);
         crate::backend::on_start(self.hide_window);
+        self.worker = crate::engine::start_league(crate::engine::LeagueCfg {
+            lang_dir: self.lang_dir,
+            renew_contracts: self.renew_contracts,
+        });
     }
 
     pub fn stop(&mut self, why: RunState) {
@@ -137,6 +147,7 @@ impl Automation {
             self.banked_secs += t.elapsed().as_secs_f64();
         }
         self.state = why;
+        self.worker = None;
         crate::backend::on_stop();
     }
 
@@ -177,6 +188,37 @@ impl Automation {
         crate::backend::hide_game_window(on);
     }
 
+    /// Show what the real bot did: a clicked step button moves the bar to
+    /// the step after it; "next" finishes a round.
+    fn follow_worker(&mut self) {
+        let events = self.worker.as_ref().map(|w| w.poll()).unwrap_or_default();
+        for e in events {
+            match e {
+                crate::engine::Event::Clicked(key) => {
+                    let now = Instant::now();
+                    self.last_progress = now;
+                    let Some(i) = STEPS.iter().position(|(_, k)| *k == Some(key)) else { continue };
+                    self.step_started = now;
+                    if i + 1 < STEPS.len() {
+                        self.step = i + 1;
+                    } else {
+                        self.step = 0;
+                        self.completed += 1;
+                        if !self.unlimited && self.completed >= self.target {
+                            self.stop(RunState::Finished);
+                            return;
+                        }
+                    }
+                }
+                crate::engine::Event::Stalled => {
+                    self.stop(RunState::Stalled);
+                    return;
+                }
+                _ => {}
+            }
+        }
+    }
+
     /// Advance the demo. Called once per frame.
     pub fn tick(&mut self) {
         if !self.is_running() {
@@ -184,6 +226,10 @@ impl Automation {
         }
         if self.last_progress.elapsed().as_secs_f64() > STALL_LIMIT_SECS {
             self.stop(RunState::Stalled);
+            return;
+        }
+        if self.worker.is_some() {
+            self.follow_worker();
             return;
         }
         let (step, key) = STEPS[self.step];

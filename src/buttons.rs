@@ -143,6 +143,10 @@ impl BuyButton {
             BuyButton::BuyBottom => ("templates/buy/buy.png", 0.88, 1.5),
             BuyButton::BuyConfirm => ("templates/buy/buy_confirm.png", 0.88, 1.5),
             BuyButton::Accept => ("templates/buy/accept.png", 0.88, 1.0),
+            // Pop-up titles/text: like the original's title pictures
+            // (contract_done_title 0.88, 1.0 s).
+            BuyButton::BoughtTitle => ("templates/buy/bought_title.png", 0.88, 1.0),
+            BuyButton::TryAgainMessage => ("templates/buy/try_again.png", 0.88, 1.0),
             BuyButton::NavTeam => ("templates/nav/team.png", DEFAULT_THRESHOLD, 1.5),
             BuyButton::TeamManage => ("templates/nav/team_manage.png", DEFAULT_THRESHOLD, 1.5),
             BuyButton::PlayerManageTab => ("templates/nav/player_manage.png", DEFAULT_THRESHOLD, 1.0),

@@ -18,7 +18,8 @@ use eframe::egui::{
 };
 
 pub const APP_NAME: &str = "FiFAO3 Mgmt";
-pub const VERSION: &str = "v1.6";
+/// Shown in the header; comes from Cargo.toml so it changes in one place.
+pub const VERSION: &str = concat!("v", env!("CARGO_PKG_VERSION"));
 
 // ---------------------------------------------------------------- fonts
 
@@ -148,6 +149,9 @@ pub struct Texts {
     pub connected: &'static str,
     pub not_found: &'static str,
     pub not_found_sub: &'static str,
+    pub minimized: &'static str,
+    pub no_pictures: &'static str,
+    pub no_level_picture: &'static str,
     pub not_admin: &'static str,
     pub ready: &'static str,
     pub running: &'static str,
@@ -192,6 +196,9 @@ static TH: Texts = Texts {
     connected: "เชื่อมต่อเกมแล้ว",
     not_found: "ไม่พบเกม",
     not_found_sub: "กรุณาเปิดเกมแบบหน้าต่าง",
+    minimized: "อย่าย่อหน้าต่างเกม",
+    no_pictures: "ไม่พบโฟลเดอร์ templates ข้างโปรแกรม",
+    no_level_picture: "ยังไม่มีรูประดับนี้ (มี +1, +3, +5)",
     not_admin: "ไม่ใช่ Admin",
     ready: "พร้อมใช้งาน",
     running: "กำลังทำงาน",
@@ -231,6 +238,9 @@ static EN: Texts = Texts {
     connected: "Game connected",
     not_found: "Game not found",
     not_found_sub: "Use windowed mode",
+    minimized: "Don't minimize the game",
+    no_pictures: "templates folder missing beside the program",
+    no_level_picture: "No picture for this level yet (+1, +3, +5)",
     not_admin: "Not admin",
     ready: "Ready",
     running: "Running",
@@ -270,6 +280,9 @@ static VI: Texts = Texts {
     connected: "Đã kết nối game",
     not_found: "Chưa có game",
     not_found_sub: "Mở game dạng cửa sổ",
+    minimized: "Đừng thu nhỏ cửa sổ game",
+    no_pictures: "Thiếu thư mục templates cạnh chương trình",
+    no_level_picture: "Chưa có hình cấp này (+1, +3, +5)",
     not_admin: "Thiếu Admin",
     ready: "Sẵn sàng",
     running: "Đang hoạt động",
@@ -533,10 +546,29 @@ pub(crate) fn connection_card(ui: &mut egui::Ui, p: &Palette, t: &Texts) {
             ui.painter().circle_filled(r.center(), 6.0, dot);
             ui.painter().circle_filled(r.center(), 9.0, dot.gamma_multiply(0.18));
             ui.add_space(4.0);
+            let problem = crate::engine::problem().and_then(|pr| {
+                use crate::engine::Problem;
+                match pr {
+                    Problem::NoGame => None,
+                    Problem::Minimized => Some(t.minimized),
+                    Problem::NoTemplates => Some(t.no_pictures),
+                    Problem::NoLevelPicture => Some(t.no_level_picture),
+                }
+            });
             match size {
+                Some(_) if problem.is_some() => {
+                    ui.label(RichText::new(t.connected).font(semi(15.0)).color(p.text));
+                    let msg = problem.unwrap_or_default();
+                    ui.label(RichText::new(msg).font(regular(12.5)).color(Color32::from_rgb(240, 140, 60)));
+                }
                 Some((w, h)) => {
                     ui.label(RichText::new(t.connected).font(semi(15.0)).color(p.text));
                     ui.label(RichText::new(format!("{w}×{h}")).font(regular(12.5)).color(p.muted));
+                }
+                None if problem.is_some() && problem != Some(t.minimized) => {
+                    ui.label(RichText::new(t.not_found).font(semi(15.0)).color(p.text));
+                    let msg = problem.unwrap_or_default();
+                    ui.label(RichText::new(msg).font(regular(12.5)).color(Color32::from_rgb(240, 140, 60)));
                 }
                 None => {
                     ui.label(RichText::new(t.not_found).font(semi(15.0)).color(p.text));

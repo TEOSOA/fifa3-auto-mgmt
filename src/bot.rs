@@ -29,6 +29,12 @@ pub const STUCK_KEEP: usize = 20;
 /// Seconds before the same choice may be picked again (PICK_COOLDOWN,
 /// read by `decide` sub_1800633d0).
 pub const PICK_COOLDOWN_SECS: f64 = 4.0;
+/// Second cooldown, 6.0 s (module constant, name slot 0x1813d04c8, loaded
+/// by sub_180069f10), read in sub_180068750 as
+/// `time_now() - self.<last>.get(key, -1e9) < <6.0>`: a pop-up button
+/// handled less than 6 s ago is not handled again. Its Python name isn't
+/// readable (MECHANICS.md round 9).
+pub const REPEAT_COOLDOWN_SECS: f64 = 6.0;
 /// Window sizes whose scale is within this of a picture's own scale use
 /// the picture as is (SCALE_NEAR, read by `_scale_of` sub_180062770).
 pub const SCALE_NEAR: f32 = 0.015;
@@ -47,6 +53,14 @@ pub const ACK_FAR_TITLES: [&str; 4] = [
     "ต่อสัญญาเสร็จเรียบร้อย·en",
 ];
 pub const ACK_FAR_DY: u32 = 340;
+/// `_ack_choice` (sub_18006a130) also checks, both times the window scale:
+/// the "Accept" centre (x + width // 2) is at most 60 px left or right of the
+/// title's centre (constant 60, `abs(..) <= 60 * scale`)...
+pub const ACK_MAX_DX: f32 = 60.0;
+/// ...and the button is at least 30 px below the title (constant 30,
+/// `30 * scale` compared with the distance; the direction of that compare
+/// isn't readable in the lifted code, so "at least" is estimated).
+pub const ACK_MIN_DY: f32 = 30.0;
 /// The contract window's "Cancel | Renew" only counts as the pair when the
 /// two buttons are level within this many pixels (CONTRACT_PAIR_DY)...
 pub const CONTRACT_PAIR_DY: u32 = 4;
@@ -56,13 +70,12 @@ pub const CONTRACT_PAIR_GAP: (u32, u32) = (35, 85);
 
 /// Stuck: the same button pressed `stuck_clicks` times without vanishing,
 /// for at least STUCK_MIN_SECONDS.
-#[allow(dead_code)] // used by the real game backend (TODO in backend.rs)
 pub fn is_stuck(repeats: u32, stuck_clicks: u32, since_secs: f64) -> bool {
     repeats >= stuck_clicks && since_secs >= STUCK_MIN_SECONDS
 }
 
 /// Whether two found buttons form the contract window's pair.
-#[allow(dead_code)] // used by the real game backend (TODO in backend.rs)
+#[allow(dead_code)] // used by the real game backend (rules kept from the original)
 pub fn is_contract_pair(dx: u32, dy: u32) -> bool {
     dy <= CONTRACT_PAIR_DY && (CONTRACT_PAIR_GAP.0..=CONTRACT_PAIR_GAP.1).contains(&dx)
 }
@@ -76,13 +89,22 @@ pub fn ack_max_dy(title: &str) -> u32 {
     }
 }
 
+/// Whether an "Accept" found `dx`, `dy` px from a pop-up title (button
+/// minus title, game pixels) belongs to that title's window, as
+/// `_ack_choice` decides before pressing it. `scale` = window / picture size.
+pub fn ack_under_title(title: &str, dx: f32, dy: f32, scale: f32) -> bool {
+    dx.abs() <= ACK_MAX_DX * scale
+        && dy >= ACK_MIN_DY * scale
+        && dy <= ack_max_dy(title) as f32 * scale
+}
+
 /// Whether a window scale can be used, and whether a picture cut at
 /// `picture_scale` fits it without resizing.
-#[allow(dead_code)] // used by the real game backend (TODO in backend.rs)
+#[allow(dead_code)] // used by the real game backend (rules kept from the original)
 pub fn scale_ok(scale: f32) -> bool {
     (SCALE_RANGE.0..=SCALE_RANGE.1).contains(&scale)
 }
-#[allow(dead_code)] // used by the real game backend (TODO in backend.rs)
+#[allow(dead_code)] // used by the real game backend (rules kept from the original)
 pub fn same_scale(scale: f32, picture_scale: f32) -> bool {
     (scale - picture_scale).abs() <= SCALE_NEAR
 }
@@ -105,6 +127,11 @@ mod tests {
         assert!(!is_contract_pair(50, 5));
         assert_eq!(ack_max_dy("ผู้จัดการเลเวลเพิ่มขึ้น"), 340);
         assert_eq!(ack_max_dy("x"), 140);
+        assert!(ack_under_title("x", 10.0, 100.0, 1.0));
+        assert!(!ack_under_title("x", 70.0, 100.0, 1.0)); // too far sideways
+        assert!(!ack_under_title("x", 0.0, 200.0, 1.0)); // too far below
+        assert!(ack_under_title("x", 0.0, 200.0, 1.5)); // bigger window
+        assert!(!ack_under_title("x", 0.0, 10.0, 1.0)); // not below the title
         assert!(scale_ok(1.875) && !scale_ok(3.5));
         assert!(same_scale(1.67, 1.66) && !same_scale(1.6, 1.67));
     }

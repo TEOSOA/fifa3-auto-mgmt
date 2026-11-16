@@ -49,9 +49,11 @@ static WORK_DIR: std::sync::Mutex<Option<String>> = std::sync::Mutex::new(None);
 pub fn hide_game_window(hide: bool) {
     #[cfg(target_os = "windows")]
     {
-        // TODO(you): find the FIFA Online 3 window (FindWindowW /
-        // EnumWindows), then ShowWindow(hwnd, SW_HIDE/SW_SHOW). The game
-        // keeps running and sending inputs while hidden.
+        // Hide without minimizing (the original forbids minimizing): the
+        // game keeps running and the bot keeps reading it.
+        if let Some(h) = crate::game::find_window() {
+            crate::game::show(h, !hide);
+        }
         eprintln!("backend: hide game window -> {}", hide);
     }
     #[cfg(not(target_os = "windows"))]
@@ -149,7 +151,7 @@ pub fn on_start(hide_window: bool) {
 
     #[cfg(target_os = "windows")]
     {
-        // TODO(you): locate the game, focus it once, then run the loop.
+        // The real loop runs in engine.rs (a worker thread per run).
         eprintln!("backend: automation starting (watchdog budget {} ms)", CHILD_WAIT_TIMEOUT_MS);
     }
     #[cfg(not(target_os = "windows"))]
@@ -196,7 +198,7 @@ fn cleanup_work_dir() {
 pub fn click_button(b: &crate::buttons::Button) {
     use crate::bot;
     use crate::buttons::Role;
-    // TODO(you): screen capture + template matching + PostMessage click:
+    // Demo log only: on Windows engine.rs does the capture, matching and click:
     // hover bot::HOVER_BEFORE_CLICK_SECS, click, wait bot::MIN_SETTLE_SECS,
     // then look every bot::POLL_INTERVAL_SECS until the button is gone.
     let rule = match b.role {
@@ -207,9 +209,10 @@ pub fn click_button(b: &crate::buttons::Button) {
             bot::CONTRACT_PAIR_GAP.1
         ),
         Role::Ack => format!(
-            "only up to {} px below a known title ({} px for the level-up window)",
+            "only up to {} px below a known title ({} px for the level-up window), not again for {} s",
             bot::ACK_MAX_DY,
-            bot::ack_max_dy(bot::ACK_FAR_TITLES[0])
+            bot::ack_max_dy(bot::ACK_FAR_TITLES[0]),
+            bot::REPEAT_COOLDOWN_SECS
         ),
         Role::Pick => format!("not again for {} s", bot::PICK_COOLDOWN_SECS),
         _ => String::new(),
@@ -232,9 +235,11 @@ pub fn click_button(b: &crate::buttons::Button) {
 /// The game window's size when it's found ("1600×900" on the original's
 /// screen). The demo reports that size.
 pub fn game_window_size() -> Option<(u32, u32)> {
-    // TODO(you): FindWindowW(crate::buttons::WINDOW_TITLE) or the window of
-    // crate::buttons::WINDOW_EXE, then GetClientRect.
-    Some((1600, 900))
+    if cfg!(target_os = "windows") {
+        crate::engine::game_size()
+    } else {
+        Some((1600, 900))
+    }
 }
 
 /// Whether this program runs with Administrator rights. The original's
@@ -256,6 +261,25 @@ pub fn is_admin() -> bool {
     }
 }
 
+/// Which pop-up the game showed after "confirm purchase": the "ซื้อ <name>"
+/// window (bought) or the "ข้อความ" window "โปรดรอสักครู่แล้วลองอีกครั้ง"
+/// (busy — not bought). Both have "ยอมรับ", so only the title/text tells
+/// them apart. `attempt` counts purchases tried this run.
+pub fn buy_outcome(lang_dir: &str, attempt: u32) -> crate::buyer::BuyOutcome {
+    use crate::buttons::BuyButton;
+    let bought = crate::matcher::template_path(lang_dir, BuyButton::BoughtTitle.spec().image);
+    let busy = crate::matcher::template_path(lang_dir, BuyButton::TryAgainMessage.spec().image);
+    // Demo only (engine.rs reads the real pop-up): find "ยอมรับ", `busy` and `bought`,
+    // and pass their offsets from the button (game pixels) below.
+    // Demo: every third purchase gets "please wait and try again"; the
+    // pop-up's text sits 120 px above the button, centred.
+    let hit = Some((0.0, 120.0));
+    let (busy_at, bought_at) = if attempt % 3 == 2 { (hit, None) } else { (None, hit) };
+    let outcome = crate::buyer::classify_popup(busy_at, bought_at, 1.0);
+    eprintln!("backend: pop-up after buying [{} | {}] -> {:?}", bought, busy, outcome);
+    outcome
+}
+
 /// Click one button of the player-buying feature. `level` is the +N the
 /// person looks for; it picks the badge picture (level_plus{N}.png).
 /// `lang_dir` picks the picture folder of the game's language, like the
@@ -265,7 +289,7 @@ pub fn click_buy_button(b: crate::buttons::BuyButton, level: u8, lang_dir: &str)
     let spec = b.spec();
     let image = matcher::template_path(lang_dir, &spec.image.replace("{n}", &level.to_string()));
     let (w, h) = game_window_size().unwrap_or((0, 0));
-    // TODO(you): find `image` on the game screen with TM_CCOEFF_NORMED
+    // Demo log only (engine.rs clicks for real): find `image` with TM_CCOEFF_NORMED
     // (>= spec.threshold, or matcher::scaled_threshold when the picture
     // had to be resized to the window); for LevelBadge pick the first
     // matching row in the search results.

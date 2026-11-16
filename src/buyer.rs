@@ -40,6 +40,26 @@ pub enum BuyOutcome {
     TryAgain,
 }
 
+/// Decide which pop-up is open from where its text was found relative to
+/// "ยอมรับ" (`dx`, `dy` = button minus text, game pixels). Like the
+/// original's `_ack_choice` (sub_18006a130), text only counts when the
+/// button sits under it (`bot::ack_under_title`). The busy text is checked
+/// first; with neither under the button nothing is counted (TryAgain).
+pub fn classify_popup(
+    busy: Option<(f32, f32)>,
+    bought: Option<(f32, f32)>,
+    scale: f32,
+) -> BuyOutcome {
+    let under = |hit: Option<(f32, f32)>| {
+        hit.is_some_and(|(dx, dy)| crate::bot::ack_under_title("", dx, dy, scale))
+    };
+    if under(busy) || !under(bought) {
+        BuyOutcome::TryAgain
+    } else {
+        BuyOutcome::Bought
+    }
+}
+
 #[derive(Clone, Copy, PartialEq, Eq, Debug)]
 pub enum BuyStep {
     FindRow,
@@ -103,6 +123,8 @@ pub struct Buyer {
     attempts: u32,
     /// Waiting before trying again until this moment.
     retry_until: Option<Instant>,
+    /// The real bot on Windows (None: the demo runs).
+    worker: Option<crate::engine::Worker>,
 }
 
 impl Buyer {
@@ -123,6 +145,7 @@ impl Buyer {
             streak_since: now,
             attempts: 0,
             retry_until: None,
+            worker: None,
         }
     }
 
@@ -157,10 +180,17 @@ impl Buyer {
         self.attempts = 0;
         self.retry_until = None;
         crate::backend::on_start(false);
+        self.worker = crate::engine::start_buy(crate::engine::BuyCfg {
+            lang_dir: self.lang_dir,
+            level: self.level,
+            remaining: self.target.saturating_sub(self.bought),
+            goto_upgrade: self.goto_upgrade,
+        });
     }
 
     pub fn stop(&mut self, why: BuyState) {
         self.state = why;
+        self.worker = None;
         crate::backend::on_stop();
     }
 
@@ -203,12 +233,56 @@ impl Buyer {
         (self.step_started.elapsed().as_secs_f64() / self.step_secs()).clamp(0.0, 1.0) as f32
     }
 
+    /// Show what the real bot did.
+    fn follow_worker(&mut self) {
+        use crate::engine::Event;
+        let events = self.worker.as_ref().map(|w| w.poll()).unwrap_or_default();
+        for e in events {
+            let now = Instant::now();
+            match e {
+                Event::BuyStep(i) | Event::NavStep(i) => {
+                    if i != self.step {
+                        self.step = i;
+                        self.step_started = now;
+                    }
+                }
+                Event::Bought => {
+                    self.last_progress = now;
+                    self.retry_until = None;
+                    self.bought += 1;
+                    if self.bought >= self.target && self.goto_upgrade {
+                        self.state = BuyState::GoingToUpgrade;
+                        self.step = 0;
+                    }
+                }
+                Event::TryAgain => {
+                    self.last_progress = now;
+                    self.try_again += 1;
+                    self.retry_until = Some(now + std::time::Duration::from_secs_f64(RETRY_WAIT_SECS));
+                }
+                Event::Done => {
+                    self.stop(BuyState::Finished);
+                    return;
+                }
+                Event::Stalled => {
+                    self.stop(BuyState::Stalled);
+                    return;
+                }
+                Event::Clicked(_) => {}
+            }
+        }
+    }
+
     pub fn tick(&mut self) {
         if !self.is_running() {
             return;
         }
         if self.last_progress.elapsed().as_secs_f64() > IDLE_MINUTES as f64 * 60.0 {
             self.stop(BuyState::Stalled);
+            return;
+        }
+        if self.worker.is_some() {
+            self.follow_worker();
             return;
         }
         if self.waiting_retry() {
@@ -271,5 +345,46 @@ impl Buyer {
             }
             _ => self.stop(BuyState::Finished),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::time::Duration;
+
+    /// Run the demo purchases without waiting: "please wait and try again"
+    /// (every third try in the demo) is never counted as bought.
+    #[test]
+    fn try_again_is_not_counted() {
+        let mut b = Buyer::new();
+        b.set_target(4);
+        b.start();
+        for _ in 0..200 {
+            if !b.is_running() {
+                break;
+            }
+            let past = Instant::now() - Duration::from_secs(30);
+            b.step_started = past;
+            if b.retry_until.is_some() {
+                b.retry_until = Some(past);
+            }
+            b.tick();
+        }
+        assert_eq!(b.state, BuyState::Finished);
+        assert_eq!(b.bought, 4);
+        assert_eq!(b.try_again, 2);
+        assert_eq!(b.attempts, 6);
+    }
+
+    #[test]
+    fn popup_counts_only_under_bought_title() {
+        let at = Some((0.0, 120.0));
+        assert_eq!(classify_popup(None, at, 1.0), BuyOutcome::Bought);
+        assert_eq!(classify_popup(at, None, 1.0), BuyOutcome::TryAgain);
+        assert_eq!(classify_popup(at, at, 1.0), BuyOutcome::TryAgain);
+        // a "ซื้อ" title elsewhere on screen isn't this pop-up's
+        assert_eq!(classify_popup(None, Some((300.0, 120.0)), 1.0), BuyOutcome::TryAgain);
+        assert_eq!(classify_popup(None, None, 1.0), BuyOutcome::TryAgain);
     }
 }

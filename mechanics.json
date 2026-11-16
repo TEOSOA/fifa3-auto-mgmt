@@ -744,6 +744,252 @@
       "group": "bot-loop",
       "value": "repeats >= 8 and >= 60 s",
       "source": "fo3bot.bot, main.dll init sub_180052480: sub_18006fb90 note_scan"
+    },
+    {
+      "name": "Busy pop-up counts as bought",
+      "group": "buy-busy",
+      "value": false,
+      "source": "user picture-12; app buyer.rs: 'โปรดรอสักครู่แล้วลองอีกครั้ง' window is not a purchase"
+    },
+    {
+      "name": "Busy text / bought title threshold",
+      "group": "buy-busy",
+      "value": 0.88,
+      "source": "user picture-12; app buyer.rs: like original contract_done_title (fo3bot.config)",
+      "estimated": true
+    },
+    {
+      "name": "Busy text / bought title delay_after (s)",
+      "group": "buy-busy",
+      "value": 1.0,
+      "source": "user picture-12; app buyer.rs: like original contract_done_title (fo3bot.config)",
+      "estimated": true
+    },
+    {
+      "name": "Retry wait after busy (s)",
+      "group": "buy-busy",
+      "value": 4,
+      "source": "user picture-12; app buyer.rs: reuses original PICK_COOLDOWN (fo3bot.bot)",
+      "estimated": true
+    },
+    {
+      "name": "Stop after busy streak",
+      "group": "buy-busy",
+      "value": "repeats >= 8 and >= 60 s",
+      "source": "user picture-12; app buyer.rs: original stuck rule sub_18006fb90"
+    },
+    {
+      "name": "Demo busy attempts",
+      "group": "buy-busy",
+      "value": "every 3rd (2, 5, 8...)",
+      "source": "user picture-12; app buyer.rs: demo backend only",
+      "estimated": true
+    },
+    {
+      "name": "ACK max sideways offset (px x scale)",
+      "group": "ack-choice",
+      "value": 60,
+      "source": "fo3bot.bot Engine._ack_choice sub_18006a130: const slot 0x1813d0538; abs(..) <= 60*scale, lines 2205-2259"
+    },
+    {
+      "name": "ACK min drop below title (px x scale)",
+      "group": "ack-choice",
+      "value": 30,
+      "source": "fo3bot.bot Engine._ack_choice sub_18006a130: const slot 0x1813d0528; 30*scale compare, lines 1944-1951 (direction estimated)",
+      "estimated": true
+    },
+    {
+      "name": "Button centre divisor",
+      "group": "ack-choice",
+      "value": 2,
+      "source": "fo3bot.bot Engine._ack_choice sub_18006a130: const slot 0x1813d0530; x + w // 2, lines 2042-2059"
+    },
+    {
+      "name": "ACK max drop rule",
+      "group": "ack-choice",
+      "value": "ACK_MAX_DY_BY_TITLE.get(title, ACK_MAX_DY)",
+      "source": "fo3bot.bot Engine._ack_choice sub_18006a130: lines 1828-1874 via sub_18006c4f0 / sub_18006c600"
+    },
+    {
+      "name": "Buy counted only under bought title",
+      "group": "ack-choice",
+      "value": true,
+      "source": "fo3bot.bot Engine._ack_choice sub_18006a130: build classify_popup uses this rule; busy text above Accept = not counted"
+    },
+    {
+      "name": "Pop-up repeat cooldown (s)",
+      "group": "repeat-cooldown",
+      "value": 6.0,
+      "source": "fo3bot.bot sub_180068750 lines 1220-1316; global name slot 0x1813d04c8 via sub_180069f10 (compare direction inferred)",
+      "estimated": true
+    },
+    {
+      "name": "Original template reference height (px)",
+      "group": "live-engine",
+      "value": 480,
+      "source": "VSCOM matched at x2.39-2.41 on 1125-1194 px tall game (picture-14); hires names 480*s",
+      "estimated": true
+    },
+    {
+      "name": "Buy template reference height (px)",
+      "group": "live-engine",
+      "value": 1125,
+      "source": "game client height in the person's screenshots picture-4..12",
+      "estimated": false
+    },
+    {
+      "name": "League working height (px)",
+      "group": "live-engine",
+      "value": 540,
+      "source": "engine.rs WORK_H_LEAGUE (speed)",
+      "estimated": true
+    },
+    {
+      "name": "Buy working height max (px)",
+      "group": "live-engine",
+      "value": 1125,
+      "source": "engine.rs WORK_H_BUY",
+      "estimated": true
+    },
+    {
+      "name": "Size sweep min factor",
+      "group": "live-engine",
+      "value": 0.85,
+      "source": "engine.rs SWEEP",
+      "estimated": true
+    },
+    {
+      "name": "Size sweep max factor",
+      "group": "live-engine",
+      "value": 1.15,
+      "source": "engine.rs SWEEP",
+      "estimated": true
+    },
+    {
+      "name": "Buy wait for next window (s)",
+      "group": "live-engine",
+      "value": 6.0,
+      "source": "engine.rs BUY_WAIT_SECS",
+      "estimated": true
+    },
+    {
+      "name": "Pop-up wait after confirm (s)",
+      "group": "live-engine",
+      "value": 8.0,
+      "source": "engine.rs POPUP_WAIT_SECS",
+      "estimated": true
+    },
+    {
+      "name": "Nav wait per menu (s)",
+      "group": "live-engine",
+      "value": 10.0,
+      "source": "engine.rs NAV_WAIT_SECS",
+      "estimated": true
+    },
+    {
+      "name": "Template blob location in main.dll",
+      "group": "live-engine",
+      "value": "file offset ~0x10ac000, base64 PNG values start at index 3",
+      "source": "constants dict of the Nuitka module",
+      "estimated": false
+    },
+    {
+      "name": "Click hold min (s)",
+      "group": "clicker-window",
+      "value": 0.03,
+      "source": "fo3bot.clicker _hold_time random.uniform, const 0x18112788c",
+      "estimated": false
+    },
+    {
+      "name": "Click hold max (s)",
+      "group": "clicker-window",
+      "value": 0.08,
+      "source": "fo3bot.clicker _hold_time random.uniform, const 0x181127895",
+      "estimated": false
+    },
+    {
+      "name": "Mouse move to press wait (s)",
+      "group": "clicker-window",
+      "value": 0.01,
+      "source": "fo3bot.clicker _click_messages time.sleep, const 0x181127951",
+      "estimated": false
+    },
+    {
+      "name": "Click jitter default (px)",
+      "group": "clicker-window",
+      "value": 2,
+      "source": "fo3bot.clicker click() defaults at 0x181128a09",
+      "estimated": false
+    },
+    {
+      "name": "Default click method",
+      "group": "clicker-window",
+      "value": "postmessage",
+      "source": "fo3bot.clicker click() defaults at 0x181128a09",
+      "estimated": false
+    },
+    {
+      "name": "Wake settle before real click (s)",
+      "group": "clicker-window",
+      "value": 0.35,
+      "source": "fo3bot.gui _wake_game time.sleep, const 0x1811307c5",
+      "estimated": false
+    },
+    {
+      "name": "Wake click jitter (px)",
+      "group": "clicker-window",
+      "value": 0,
+      "source": "fo3bot.gui _wake_game clicker.click(method='sendinput', jitter=0)",
+      "estimated": false
+    },
+    {
+      "name": "Blank picture max brightness",
+      "group": "clicker-window",
+      "value": 10,
+      "source": "fo3bot.capture is_blank img.max() < 10, const 0x181125017",
+      "estimated": false
+    },
+    {
+      "name": "Skipped window class",
+      "group": "clicker-window",
+      "value": "Ghost",
+      "source": "fo3bot.window find_window docstring, consts 0x181143c00-0x1811473b2",
+      "estimated": false
+    },
+    {
+      "name": "Min game window width (px)",
+      "group": "clicker-window",
+      "value": 200,
+      "source": "fo3bot.window MIN_GAME_WINDOW name at 0x181144252, number not readable",
+      "estimated": true
+    },
+    {
+      "name": "Min game window height (px)",
+      "group": "clicker-window",
+      "value": 150,
+      "source": "fo3bot.window MIN_GAME_WINDOW name at 0x181144252, number not readable",
+      "estimated": true
+    },
+    {
+      "name": "Hidden window alpha (of 255)",
+      "group": "clicker-window",
+      "value": 1,
+      "source": "fo3bot.window hide_in_place sub_1801931e0 line 0x117 SetLayeredWindowAttributes; alpha from shared const pair 0x181365820+0x10, not readable",
+      "estimated": true
+    },
+    {
+      "name": "Shown window alpha (of 255)",
+      "group": "clicker-window",
+      "value": 255,
+      "source": "fo3bot.window show_in_place sub_1801944f0 const slot 0x1813d7b08",
+      "estimated": false
+    },
+    {
+      "name": "Offscreen margin (px)",
+      "group": "clicker-window",
+      "value": 50,
+      "source": "fo3bot.window move_offscreen const slot 0x1813d7a78 (not used by build)",
+      "estimated": false
     }
   ]
 }

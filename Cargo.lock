@@ -1255,7 +1255,7 @@ dependencies = [
 
 [[package]]
 name = "fifao3-mgmt"
-version = "1.6.0"
+version = "1.7.1"
 dependencies = [
  "eframe",
  "egui",

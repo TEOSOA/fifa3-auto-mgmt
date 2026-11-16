@@ -16,8 +16,11 @@ mod backend;
 mod buttons;
 mod buy_ui;
 mod buyer;
+mod engine;
+mod game;
 mod matcher;
 mod ui;
+mod vision;
 
 use eframe::egui;
 use std::path::PathBuf;
@@ -86,6 +89,7 @@ impl eframe::App for App {
         // F8 starts / stops the open page, like the original.
         let mut toggle = ctx.input(|i| i.key_pressed(egui::Key::F8));
 
+        self.automation.lang_dir = self.ui.lang.template_dir();
         self.automation.tick();
         self.buyer.lang_dir = self.ui.lang.template_dir();
         self.buyer.tick();
@@ -156,7 +160,44 @@ fn parse_args() -> Option<PathBuf> {
     None
 }
 
+/// `--find <screen.png> <picture.png>`: try the picture at every scale the
+/// bot accepts and print the best place for each (checks the matcher on a
+/// saved game screenshot without the game).
+fn find_cli(args: &[String]) {
+    let (Some(screen), Some(tpl)) = (args.get(2), args.get(3)) else {
+        eprintln!("usage: --find <screen.png> <picture.png>");
+        return;
+    };
+    let (Some(img), Some(t)) = (vision::Gray::load(screen.as_ref()), vision::Gray::load(tpl.as_ref())) else {
+        eprintln!("could not read the pictures");
+        return;
+    };
+    // A scale given: list every place scoring 0.7 or more at that scale.
+    if let Some(s) = args.get(4).and_then(|v| v.parse::<f32>().ok()) {
+        for h in vision::find_all(&img, &t.scaled(s), 0.7, 40) {
+            println!("{:?}", h);
+        }
+        return;
+    }
+    let mut s = bot::SCALE_RANGE.0;
+    while s <= bot::SCALE_RANGE.1 {
+        if let Some(h) = vision::find_best(&img, &t.scaled(s)) {
+            println!("scale {:.3}: {:?}", s, h);
+        }
+        s *= 1.03;
+    }
+}
+
 fn main() -> eframe::Result<()> {
+    let args: Vec<String> = std::env::args().collect();
+    if args.get(1).map(String::as_str) == Some("--find") {
+        find_cli(&args);
+        return Ok(());
+    }
+    if args.get(1).map(String::as_str) == Some("--scan") {
+        engine::scan_cli(&args);
+        return Ok(());
+    }
     let screenshot_path = parse_args();
     let shooting = screenshot_path.is_some();
 
@@ -202,4 +243,16 @@ fn event_loop_hook(shooting: bool) -> eframe::EventLoopBuilderHook {
             builder.with_activate_ignoring_other_apps(false);
         }
     })
+}
+
+#[cfg(test)]
+mod tests {
+    /// The Windows manifest carries the same version as Cargo.toml (the one
+    /// place to change it): "1.7.0" there is "1.7.0.0" in the manifest.
+    #[test]
+    fn manifest_version_matches() {
+        let manifest = include_str!("../windows-res/app.manifest");
+        let want = format!("version=\"{}.0\"", env!("CARGO_PKG_VERSION"));
+        assert!(manifest.contains(&want), "set {want} in windows-res/app.manifest");
+    }
 }
